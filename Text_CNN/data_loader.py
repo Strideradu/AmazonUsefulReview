@@ -46,31 +46,34 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     return [x_text, y]
 
 
-def load_json_raw_data(chunk_path, chunk_num):
+def load_json_raw_data(chunk_path):
     x_text = []
     y=[]
-    for i in range(chunk_num):
-        chunk_path = chunk_path + str(i) + '.json'
-        with open(chunk_path, 'r') as json_chunk_file:
-            for lines in json_chunk_file:
-                # line_buf = json_chunk_file.readline()
-                line_jsonify = json.loads(lines)  # build a dictionary
-                x_text.append(str(line_jsonify['reviewText']))
-                helpful_list = line_jsonify['helpful']
+    count = [0, 0, 0]
+    with open(chunk_path, 'r') as json_chunk_file:
+        for lines in json_chunk_file:
+            # line_buf = json_chunk_file.readline()
+            line_jsonify = json.loads(lines)  # build a dictionary
+            x_text.append(str(line_jsonify['reviewText']))
+            helpful_list = line_jsonify['helpful']
 
-                if helpful_list[1] == 0 or helpful_list[0] == helpful_list[1] / 2:
-                    helpful_score = [0, 1, 0]  # Neutral
-                elif helpful_list[0] > helpful_list[1] / 2:
-                    helpful_score = [0, 0, 1]  # helpful
-                elif helpful_list[0] < helpful_list[1] / 2:
-                    helpful_score = [1, 0, 0]  # not helpful
+            if helpful_list[1] == 0 or helpful_list[0] == helpful_list[1] / 2:
+                helpful_score = [0, 1, 0]  # Neutral
+                count[1] += 1
+            elif helpful_list[0] > helpful_list[1] / 2:
+                helpful_score = [0, 0, 1]  # helpful
+                count[2] += 1
+            elif helpful_list[0] < helpful_list[1] / 2:
+                helpful_score = [1, 0, 0]  # not helpful
+                count[0] += 1
 
-                y.append(helpful_score)
+            y.append(helpful_score)
 
-            json_chunk_file.close()
+        json_chunk_file.close()
     # print(self.review_text_list[6])
     # print(self.review_text_list[7])
-    print('Chunk ' + str(chunk_num) + ' loaded. Label count: ')
+    print('Chunk loaded. Label count: ')
+    print(count)
     return [x_text, np.array(y)]
 
 def batch_iter(data, batch_size, num_epochs, shuffle=True):

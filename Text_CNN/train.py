@@ -5,8 +5,8 @@ import numpy as np
 import os
 import time
 import datetime
-from Text_CNN.data_loader import *
-from Text_CNN.text_cnn import TextCNN
+from data_loader import *
+from text_cnn import TextCNN
 from tensorflow.contrib import learn
 
 # Parameters
@@ -49,7 +49,7 @@ print("")
 # Load data
 print("Loading data...")
 #x_text, y = load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
-x_text, y = load_json_raw_data(FLAGS.json_file, 26)
+x_text, y = load_json_raw_data(FLAGS.json_file)
 
 # Build vocabulary
 max_document_length = max([len(x.split(" ")) for x in x_text])

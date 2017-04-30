@@ -55,3 +55,6 @@ word2vec_model/model.ckpt-200001.index
 *.png
 word2vec_model/checkpoint
 *.meta
+*.log
+result_output/logs/events.out.tfevents.1490904647.HIMALAYA
+*.ELANS-3110-DLY

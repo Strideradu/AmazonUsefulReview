@@ -46,7 +46,7 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     return [x_text, y]
 
 
-def load_json_raw_data(chunk_path):
+def load_json_raw_data(chunk_path, num_limit):
     x_text = []
     y=[]
     count = [0, 0, 0]
@@ -54,19 +54,25 @@ def load_json_raw_data(chunk_path):
         for lines in json_chunk_file:
             # line_buf = json_chunk_file.readline()
             line_jsonify = json.loads(lines)  # build a dictionary
-            x_text.append(str(line_jsonify['reviewText']))
+
             helpful_list = line_jsonify['helpful']
 
             if helpful_list[1] == 0 or helpful_list[0] == helpful_list[1] / 2:
                 helpful_score = [0, 1, 0]  # Neutral
                 count[1] += 1
+                if count[0]>num_limit:
+                    continue
             elif helpful_list[0] > helpful_list[1] / 2:
                 helpful_score = [0, 0, 1]  # helpful
                 count[2] += 1
+                if count[0]>num_limit:
+                    continue
             elif helpful_list[0] < helpful_list[1] / 2:
                 helpful_score = [1, 0, 0]  # not helpful
                 count[0] += 1
-
+                if count[0]>num_limit:
+                    continue
+            x_text.append(str(line_jsonify['reviewText']))
             y.append(helpful_score)
 
         json_chunk_file.close()

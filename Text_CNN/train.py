@@ -15,6 +15,7 @@ from tensorflow.contrib import learn
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .05, "Percentage of the training data to use for validation")
 tf.flags.DEFINE_string("json_file", "/mnt/home/dunan/Learn/Class/CSE842/Data/electornic.json", "Data source for review.")
+tf.flags.DEFINE_string("word2vec_file", "/mnt/home/dunan/Learn/Class/CSE842/Data/glove_6B/", "File path for word2vec")
 #tf.flags.DEFINE_string("positive_data_file", "./data/rt-polaritydata/rt-polarity.pos", "Data source for the positive data.")
 #tf.flags.DEFINE_string("negative_data_file", "./data/rt-polaritydata/rt-polarity.neg", "Data source for the negative data.")
 
@@ -136,6 +137,10 @@ with tf.Graph().as_default():
 
         # Initialize all variables
         sess.run(tf.global_variables_initializer())
+        vocabulary = vocab_processor.vocabulary_
+        initW = None
+        initW = load_embedding_vectors_glove(vocabulary, FLAGS.word2vec_file, 100)
+        sess.run(cnn.W.assign(initW))
 
         def train_step(x_batch, y_batch):
             """

@@ -57,16 +57,16 @@ def load_json_raw_data(chunk_path, num_limit):
 
             helpful_list = line_jsonify['helpful']
 
-            #if helpful_list[1] == 0 or helpful_list[0] == helpful_list[1] / 2:
-            if helpful_list[0] == helpful_list[1] / 2:
+            if helpful_list[1] == 0 or helpful_list[0] == helpful_list[1] / 2:
+            #if helpful_list[0] == helpful_list[1] / 2:
                 helpful_score = [0, 1, 0]  # Neutral
                 count[1] += 1
-                if count[0]>num_limit:
+                if count[1]>num_limit:
                     continue
             elif helpful_list[0] > helpful_list[1] / 2:
                 helpful_score = [0, 0, 1]  # helpful
                 count[2] += 1
-                if count[0]>num_limit:
+                if count[2]>num_limit:
                     continue
             elif helpful_list[0] < helpful_list[1] / 2:
                 helpful_score = [1, 0, 0]  # not helpful
